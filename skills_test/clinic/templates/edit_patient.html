@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Patient</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f9; padding: 50px; display: flex; justify-content: center; }
+        .card { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 400px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        h2 { text-align: center; color: #333; }
+        .cancel { display: block; text-align: center; margin-top: 15px; text-decoration: none; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Edit Patient</h2>
+        <form method="post">
+            <label>First Name</label>
+            <input type="text" name="fname" value="{{ patient['patFName'] }}" required>
+            <label>Last Name</label>
+            <input type="text" name="lname" value="{{ patient['patLName'] }}" required>
+            <label>Birth Date</label>
+            <input type="date" name="bdate" value="{{ patient['patBDate'] }}" required>
+            <label>Tel No.</label>
+            <input type="text" name="tel" value="{{ patient['patTelNo'] }}" required>
+            <button type="submit">Update Patient</button>
+        </form>
+        <a href="/patients" class="cancel">Cancel</a>
+    </div>
+</body>
+</html>

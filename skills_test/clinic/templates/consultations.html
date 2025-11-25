@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Consultations</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; }
+        .container { max-width: 1100px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        .counter { background: #007bff; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.6em; }
+        form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #e9ecef; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .full-width { grid-column: span 2; }
+        select, input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; box-sizing: border-box; }
+        button { grid-column: span 2; padding: 10px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background: #333; color: white; }
+        .action-link { text-decoration: none; font-weight: bold; margin-right: 10px; }
+        .edit { color: #ffc107; }
+        .delete { color: #dc3545; }
+        .back-link { text-decoration: none; color: #555; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Menu</a>
+        <h1>Consultations <span class="counter">Total: {{ count }}</span></h1>
+
+        <form method="post">
+            <select name="patID" required>
+                <option value="" disabled selected>Select Patient</option>
+                {% for p in patients %}
+                    <option value="{{ p['patID'] }}">{{ p['patFName'] }} {{ p['patLName'] }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="docID" required>
+                <option value="" disabled selected>Select Doctor</option>
+                {% for d in doctors %}
+                    <option value="{{ d['docID'] }}">{{ d['docFName'] }} {{ d['docLName'] }}</option>
+                {% endfor %}
+            </select>
+
+            <input type="text" name="diagnosis" placeholder="Diagnosis" class="full-width" required>
+            <input type="text" name="prescription" placeholder="Prescription" class="full-width" required>
+
+            <button type="submit">Add Consultation Record</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Diagnosis</th>
+                    <th>Prescription</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in consultations %}
+                <tr>
+                    <td>{{ c['consultDate'] }}</td>
+                    <td>{{ c['patFName'] }} {{ c['patLName'] }}</td>
+                    <td>{{ c['docFName'] }} {{ c['docLName'] }}</td>
+                    <td>{{ c['diagnosis'] }}</td>
+                    <td>{{ c['prescription'] }}</td>
+                    <td>
+                        <a href="/consultations/edit/{{ c['consultID'] }}" class="action-link edit">Edit</a>
+                        <a href="/consultations/delete/{{ c['consultID'] }}" class="action-link delete" onclick="return confirm('Delete?')">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

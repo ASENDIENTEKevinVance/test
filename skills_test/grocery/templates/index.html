@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GROCERY</title><style>
+        /* CSS STYLES */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            padding: 50px;
+            position: relative; /* Needed for the absolute counter */
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 600px;
+        }
+        h1 { text-align: center; color: #333; }
+        
+        /* Counter Badge Style */
+        .counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            font-size: 14px;
+        }
+
+        /* Form Styles */
+        form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        /* Style both Inputs and Select dropdowns */
+        input, select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { background-color: #218838; }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th { background-color: #007bff; color: white; }
+        tr:hover { background-color: #f1f1f1; }
+
+        /* Action Links */
+        .btn-edit { color: #e0a800; text-decoration: none; font-weight: bold; margin-right: 10px; }
+        .btn-delete { color: #dc3545; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="counter">
+    Available Grocery Products = {{ grocery_count }}
+</div>
+
+<div class="container">
+    <form action="/add" method="post">
+        <input type="text" name="name" placeholder="Product Name" required>
+        <button type="submit">Add</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grocery in grocery %}
+            <tr>
+                <td>{{ grocery['id'] }}</td>
+                <td>{{ grocery['name'] }}</td>
+                <td> 
+                    <a href="/delete/{{ grocery['id'] }}" class="btn_delete" onclick="return confirm('Are you Sure?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

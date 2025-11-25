@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Patients</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        .counter { background: #007bff; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.6em; }
+        form { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto; gap: 10px; background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 8px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background: #333; color: white; }
+        .action-link { text-decoration: none; font-weight: bold; margin-right: 10px; }
+        .edit { color: #ffc107; }
+        .delete { color: #dc3545; }
+        .back-link { text-decoration: none; color: #555; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Menu</a>
+        <h1>Patients List <span class="counter">Total: {{ count }}</span></h1>
+
+        <form method="post">
+            <input type="text" name="fname" placeholder="First Name" required>
+            <input type="text" name="lname" placeholder="Last Name" required>
+            <input type="date" name="bdate" required title="Birth Date">
+            <input type="text" name="tel" placeholder="Tel No." required>
+            <button type="submit">Add</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Birth Date</th>
+                    <th>Tel No</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in patients %}
+                <tr>
+                    <td>{{ p['patID'] }}</td>
+                    <td>{{ p['patFName'] }} {{ p['patLName'] }}</td>
+                    <td>{{ p['patBDate'] }}</td>
+                    <td>{{ p['patTelNo'] }}</td>
+                    <td>
+                        <a href="/patients/edit/{{ p['patID'] }}" class="action-link edit">Edit</a>
+                        <a href="/patients/delete/{{ p['patID'] }}" class="action-link delete" onclick="return confirm('Delete?')">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

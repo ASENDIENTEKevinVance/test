@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clinic Management System</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; padding: 50px; display: flex; justify-content: center; }
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 700px; }
+        .menu-item {
+            background: white; padding: 40px; text-align: center; border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-decoration: none; color: #333;
+            transition: transform 0.2s; border: 2px solid transparent;
+        }
+        .menu-item:hover { transform: translateY(-5px); border-color: #007bff; }
+        .icon { font-size: 40px; margin-bottom: 10px; display: block; }
+        h2 { margin: 0; font-size: 18px; color: #555; }
+        .header { grid-column: span 2; text-align: center; margin-bottom: 20px; }
+        h1 { color: #007bff; }
+    </style>
+</head>
+<body>
+    <div class="menu-grid">
+        <div class="header"><h1>🏥 Clinic Management System</h1></div>
+        
+        <a href="/doctors" class="menu-item">
+            <span class="icon">👨‍⚕️</span>
+            <h2>1. Doctor Management</h2>
+        </a>
+        <a href="/patients" class="menu-item">
+            <span class="icon">🤒</span>
+            <h2>2. Patient Management</h2>
+        </a>
+        <a href="/consultations" class="menu-item">
+            <span class="icon">📝</span>
+            <h2>3. Consultations Transaction</h2>
+        </a>
+        <a href="/inquiries" class="menu-item">
+            <span class="icon">🔍</span>
+            <h2>4. Inquiries & Reports</h2>
+        </a>
+    </div>
+</body>
+</html>

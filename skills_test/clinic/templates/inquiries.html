@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clinic Inquiries</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f8f9fa; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .search-box { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .result-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h3 { margin-top: 0; color: #007bff; }
+        form { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee; display: flex; gap: 10px; align-items: center; }
+        input, select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        button { padding: 8px 15px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background: #f1f1f1; }
+        .home-btn { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #666; font-weight: bold; }
+        .badge { background: #17a2b8; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.9em; float: right; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="/" class="home-btn">← Back to Menu</a>
+    <h1>Inquiries Dashboard</h1>
+
+    <div class="search-box">
+        <form method="post">
+            <input type="hidden" name="search_type" value="specialization">
+            <label>Find Doctors by Specialization:</label>
+            <input type="text" name="keyword" placeholder="e.g. Surgery" required>
+            <button type="submit">Search</button>
+        </form>
+
+        <form method="post">
+            <input type="hidden" name="search_type" value="age_range">
+            <label>Patients Age From:</label>
+            <input type="number" name="min_age" style="width: 60px" required>
+            <label>To:</label>
+            <input type="number" name="max_age" style="width: 60px" required>
+            <button type="submit">Search</button>
+        </form>
+
+        <form method="post">
+            <input type="hidden" name="search_type" value="by_id">
+            <label>Consultations by ID (Doc or Pat):</label>
+            <input type="number" name="search_id" placeholder="Enter ID" required>
+            <button type="submit">Search</button>
+        </form>
+
+        <form method="post">
+            <input type="hidden" name="search_type" value="date_range">
+            <label>Consultations From:</label>
+            <input type="date" name="start_date" required>
+            <label>To:</label>
+            <input type="date" name="end_date" required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    {% if search_type %}
+    <div class="result-box">
+        <h3>Results <span class="badge">Count: {{ count }}</span></h3>
+        
+        {% if count == 0 %}
+            <p>No records found.</p>
+        {% else %}
+            <table>
+                <thead>
+                    {% if search_type == 'specialization' %}
+                        <tr><th>ID</th><th>First Name</th><th>Last Name</th><th>Specialization</th></tr>
+                    {% elif search_type == 'age_range' %}
+                        <tr><th>ID</th><th>First Name</th><th>Last Name</th><th>Birthdate</th><th>Tel No</th></tr>
+                    {% else %}
+                        <tr><th>ID</th><th>Date</th><th>Patient</th><th>Doctor</th><th>Diagnosis</th></tr>
+                    {% endif %}
+                </thead>
+                <tbody>
+                    {% for row in results %}
+                    <tr>
+                        {% if search_type == 'specialization' %}
+                            <td>{{ row['docID'] }}</td><td>{{ row['docFName'] }}</td><td>{{ row['docLName'] }}</td><td>{{ row['docSpecial'] }}</td>
+                        {% elif search_type == 'age_range' %}
+                            <td>{{ row['patID'] }}</td><td>{{ row['patFName'] }}</td><td>{{ row['patLName'] }}</td><td>{{ row['patBDate'] }}</td><td>{{ row['patTelNo'] }}</td>
+                        {% else %}
+                            <td>{{ row['consultID'] }}</td><td>{{ row['consultDate'] }}</td><td>{{ row['patFName'] }} {{ row['patLName'] }}</td><td>{{ row['docFName'] }} {{ row['docLName'] }}</td><td>{{ row['diagnosis'] }}</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>

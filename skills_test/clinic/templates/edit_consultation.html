@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Consultation</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f9; padding: 50px; display: flex; justify-content: center; }
+        .card { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 500px; }
+        input, select { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        h2 { text-align: center; color: #333; }
+        .cancel { display: block; text-align: center; margin-top: 15px; text-decoration: none; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Edit Consultation</h2>
+        <form method="post">
+            <label>Patient</label>
+            <select name="patID" required>
+                {% for p in patients %}
+                <option value="{{ p['patID'] }}" {% if p['patID'] == consultation['patID'] %}selected{% endif %}>
+                    {{ p['patFName'] }} {{ p['patLName'] }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <label>Doctor</label>
+            <select name="docID" required>
+                {% for d in doctors %}
+                <option value="{{ d['docID'] }}" {% if d['docID'] == consultation['docID'] %}selected{% endif %}>
+                    {{ d['docFName'] }} {{ d['docLName'] }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <label>Diagnosis</label>
+            <input type="text" name="diagnosis" value="{{ consultation['diagnosis'] }}" required>
+            
+            <label>Prescription</label>
+            <input type="text" name="prescription" value="{{ consultation['prescription'] }}" required>
+            
+            <button type="submit">Update Record</button>
+        </form>
+        <a href="/consultations" class="cancel">Cancel</a>
+    </div>
+</body>
+</html>
