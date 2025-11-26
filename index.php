@@ -1,41 +1,41 @@
 <?php
-// === BACKEND ===
+
 $db = new PDO("mysql:host=localhost;dbname=library_db", "root", "");
 $in = json_decode(file_get_contents("php://input"), true);
 
 if (isset($in['action'])) {
-    // 1. LIST (Get all books)
+    //  LIST
     if ($in['action'] === 'list') {
-        $stmt = $db->query("SELECT * FROM books"); // Simple select
+        $stmt = $db->query("SELECT * FROM books");
         echo json_encode($stmt->fetchAll());
     }
 
-    // 2. SEARCH (Find by ISBN)
+    //  SEARCH
     if ($in['action'] === 'search') {
         $stmt = $db->prepare("SELECT * FROM books WHERE isbn = ?");
         $stmt->execute([$in['isbn']]);
-        echo json_encode($stmt->fetch()); // Returns 1 row or false
+        echo json_encode($stmt->fetch());
     }
 
-    // 3. ADD (Try to insert, catch duplicate ISBN error)
+    //  ADD
     if ($in['action'] === 'add') {
         try {
             $stmt = $db->prepare("INSERT INTO books VALUES (?, ?, ?, ?, ?, ?)");
             $stmt->execute([$in['isbn'], $in['title'], $in['copy'], $in['edit'], $in['price'], $in['qty']]);
             echo json_encode(["status" => "success"]);
         } catch (Exception $e) {
-            echo json_encode(["status" => "exists"]); // Duplicate ISBN
+            echo json_encode(["status" => "exists"]);
         }
     }
 
-    // 4. EDIT (Update based on ISBN)
+    //  EDIT
     if ($in['action'] === 'edit') {
         $stmt = $db->prepare("UPDATE books SET title=?, copyright=?, edition=?, price=?, quantity=? WHERE isbn=?");
         $stmt->execute([$in['title'], $in['copy'], $in['edit'], $in['price'], $in['qty'], $in['isbn']]);
         echo json_encode(["status" => "success"]);
     }
 
-    // 5. DELETE (Hard Delete based on this paper)
+    //  DELETE
     if ($in['action'] === 'delete') {
         $stmt = $db->prepare("DELETE FROM books WHERE isbn = ?");
         $stmt->execute([$in['isbn']]);
@@ -51,51 +51,46 @@ if (isset($in['action'])) {
 <style>
     body { font-family: sans-serif; padding: 20px; }
     
-    /* 1. THE MAIN LAYOUT CONTAINER */
     .main-container {
-        display: flex;      /* Puts Left and Right side-by-side */
-        gap: 30px;          /* Space between them */
+        display: flex;
+        gap: 30px;
         margin-bottom: 20px;
     }
 
-    /* 2. LEFT SIDE (The Form Fields) */
     .left-form {
-        width: 350px;       /* Fixed width for the inputs */
+        width: 350px;
     }
     .form-row {
         display: flex;
-        margin-bottom: 8px; /* Space between inputs */
+        margin-bottom: 8px;
     }
     .form-row label {
-        width: 100px;       /* Label width */
+        width: 100px;
         font-weight: bold;
     }
     .form-row input {
-        flex: 1;            /* Input takes remaining space */
+        flex: 1;
         padding: 4px;
     }
 
-    /* 3. RIGHT SIDE (Buttons & Prompt) */
     .right-controls {
-        flex: 1;            /* Takes up the rest of the screen width */
+        flex: 1;       
         display: flex;
-        flex-direction: column; /* Stack buttons on top of prompt */
+        flex-direction: column;
     }
 
-    /* The Button Grid (2x2 like the image) */
     .btn-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* Two equal columns */
-        gap: 10px;          /* Space between buttons */
+        grid-template-columns: 1fr 1fr;
+        gap: 10px; 
         margin-bottom: 20px;
     }
     button {
-        padding: 15px;      /* Make buttons big and clickable */
+        padding: 15px;
         font-weight: bold;
         cursor: pointer;
     }
 
-    /* The Prompt Box */
     #prompt {
         border: 2px solid black;
         background: #e0e0e0;
@@ -103,10 +98,9 @@ if (isset($in['action'])) {
         text-align: center;
         font-weight: bold;
         font-size: 1.2em;
-        min-height: 40px;   /* Ensure it has height even when empty */
+        min-height: 40px;
     }
 
-    /* TABLE STYLES */
     table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     th, td { border: 1px solid #333; padding: 8px; text-align: center; }
     th { background: #ddd; }
@@ -155,18 +149,15 @@ if (isset($in['action'])) {
             </tr>
         </tfoot>
     </table>
-    <button onclick="clearForm();setPrompt('')" style="padding:30px;margin-top:50px;float:right">Clear Form</button>
+    <button onclick="clearForm();setPrompt('')" style="padding:30px;margin-top:20px;float:right">Clear Form</button>
 
     <script>
-        // --- HELPER: Clear all input boxes ---
         function clearForm() {
             document.querySelectorAll('input').forEach(box => box.value = '');
         }
 
-        // HELPER: Update the prompt box
         function setPrompt(msg) { document.getElementById('prompt').innerText = msg; }
 
-        // HELPER: Get all values from inputs
         function getForm() {
             return {
                 isbn: document.getElementById('isbn').value,
@@ -178,7 +169,7 @@ if (isset($in['action'])) {
             };
         }
 
-        // 1. ADD FUNCTION
+        //  ADD
         async function doAdd() {
             const data = getForm();
             if(!data.isbn) { setPrompt("NO RECORD TO ADD"); return; } 
@@ -200,7 +191,7 @@ if (isset($in['action'])) {
             }
         }
 
-        // 2. SEARCH FUNCTION
+        //  SEARCH
         async function doSearch() {
             const isbn = document.getElementById('isbn').value;
             const res = await fetch('index.php', {
@@ -222,7 +213,7 @@ if (isset($in['action'])) {
             }
         }
 
-        // 3. EDIT FUNCTION
+        //  EDIT
         async function doEdit() {
             const data = getForm();
             if(!data.isbn) { setPrompt("NO RECORD TO EDIT"); return; }
@@ -235,7 +226,7 @@ if (isset($in['action'])) {
             loadList();
         }
 
-        // 4. DELETE FUNCTION
+        //  DELETE
         async function doDelete() {
             const isbn = document.getElementById('isbn').value;
             await fetch('index.php', {
@@ -247,7 +238,7 @@ if (isset($in['action'])) {
             document.getElementById('isbn').focus();
         }
 
-        // 5. LOAD LIST
+        //  LOAD LIST
         async function loadList() {
             const res = await fetch('index.php', { method: 'POST', body: JSON.stringify({ action: 'list' }) });
             const data = await res.json();
@@ -257,13 +248,11 @@ if (isset($in['action'])) {
             let totalQty = 0;
             
             data.forEach(row => {
-                // Ensure these are treated as numbers
                 let qty = Number(row.quantity); 
                 let price = Number(row.price);
                 
                 let rowTotal = price * qty;
                 
-                // Add to the running totals
                 grandTotal += rowTotal;
                 totalQty += qty; 
 
@@ -280,8 +269,8 @@ if (isset($in['action'])) {
             
             document.getElementById('list').innerHTML = html;
             
-            // Show the totals
-            document.getElementById('totalQty').innerText = totalQty; // Whole number for books
+            // Totals
+            document.getElementById('totalQty').innerText = totalQty;
             document.getElementById('grandTotal').innerText = grandTotal.toFixed(2);
         }
 
