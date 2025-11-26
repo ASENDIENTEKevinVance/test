@@ -155,11 +155,9 @@ if (isset($in['action'])) {
             </tr>
         </tfoot>
     </table>
+    <button onclick="clearForm();setPrompt('')" style="padding:30px;margin-top:50px;float:right">Clear Form</button>
 
     <script>
-        // ... PASTE YOUR JAVASCRIPT HERE ...
-        // (Use the script I gave you in the previous response)
-        
         // --- HELPER: Clear all input boxes ---
         function clearForm() {
             document.querySelectorAll('input').forEach(box => box.value = '');
@@ -217,8 +215,10 @@ if (isset($in['action'])) {
                 document.getElementById('price').value = row.price;
                 document.getElementById('qty').value = row.quantity;
                 setPrompt("ITEM IS FOUND");
+                document.getElementById('isbn').focus();
             } else {
                 setPrompt("ITEM NOT FOUND");
+                document.getElementById('isbn').focus();
             }
         }
 
@@ -255,7 +255,7 @@ if (isset($in['action'])) {
             let html = "";
             let grandTotal = 0;
             let totalQty = 0;
-
+            
             data.forEach(row => {
                 // Ensure these are treated as numbers
                 let qty = Number(row.quantity); 
